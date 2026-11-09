@@ -1,11 +1,12 @@
 /*******************************************************************
  * Name: Michelle Cruz
  * Date: November 9, 2026
- * Assignment: SDC330 Course Project - Week 3 Class Implementation
+ * Assignment: SDC330 Course Project - Week 4 Database Implementation
  *
  * Provides validated terminal menus for customer and appointment management.
  */
 import java.math.BigDecimal;
+import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
@@ -29,11 +30,14 @@ public class App {
             CleaningRepository repository = new CleaningRepository("jdbc:sqlite:cleaning_tracker.db");
             repository.initializeDatabase();
             new App(input, repository).run();
+        } catch (SQLException exception) {
+            System.out.println("Database could not be opened: " + exception.getMessage());
+            System.out.println("Confirm the SQLite JDBC JAR is in the lib folder and the folder is writable.");
         }
     }
     public void run() {
-        System.out.println("Michelle Cruz - Cleaning Service Job Tracker - Week 3");
-        System.out.println("Records are kept in memory for this phase and reset when the program closes.");
+        System.out.println("Michelle Cruz - Cleaning Service Job Tracker - Week 4");
+        System.out.println("Records are saved in cleaning_tracker.db and remain available after exit.");
         try {
             while (true) {
                 showMenu();
@@ -79,6 +83,8 @@ public class App {
                         System.out.println("Customer deleted successfully.");
                     }
                 } else System.out.println("Choose a listed option.");
+            } catch (SQLException exception) {
+                System.out.println("Database action failed: " + exception.getMessage());
             } catch (IllegalArgumentException exception) {
                 System.out.println("Unable to complete action: " + exception.getMessage());
             }
@@ -118,6 +124,8 @@ public class App {
                         System.out.println("Appointment deleted successfully.");
                     }
                 } else System.out.println("Choose a listed option.");
+            } catch (SQLException exception) {
+                System.out.println("Database action failed: " + exception.getMessage());
             } catch (IllegalArgumentException exception) {
                 System.out.println("Unable to complete action: " + exception.getMessage());
             }
@@ -126,7 +134,7 @@ public class App {
     private Customer readCustomer() {
         return new Customer(0, readRequired("Name: "), readRequired("Phone: "), readLine("Email (optional): "));
     }
-    private Appointment readAppointment() {
+    private Appointment readAppointment() throws SQLException {
         Customer customer;
         while (true) {
             customer = repository.findCustomer(readInt("Customer ID: ")).orElse(null);

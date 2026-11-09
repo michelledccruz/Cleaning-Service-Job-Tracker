@@ -1,7 +1,7 @@
 /*******************************************************************
  * Name: Michelle Cruz
  * Date: November 9, 2026
- * Assignment: SDC330 Course Project - Week 3 Class Implementation
+ * Assignment: SDC330 Course Project - Week 4 Database Implementation
  *
  * Provides shared service state and polymorphic pricing behavior.
  */
